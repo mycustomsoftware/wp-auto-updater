@@ -28,6 +28,9 @@ $dirs = DIRECTORY_SEPARATOR;
 if(!defined('WP_UPDATE_CHECKER_PL_PATH')){
 	define('WP_UPDATE_CHECKER_PL_PATH', __DIR__);
 }
+if(!defined('WP_UPDATE_CHECKER_PL_FILE')){
+	define('WP_UPDATE_CHECKER_PL_FILE', __FILE__);
+}
 if(!defined('WP_UPDATE_CHECKER_PATH')){
 	define('WP_UPDATE_CHECKER_PATH', __DIR__.$dirs.'updater'.$dirs);
 }

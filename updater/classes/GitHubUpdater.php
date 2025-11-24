@@ -66,12 +66,11 @@ class GitHubUpdater
 	 * @return void
 	 */
 	public function __construct( $config = array() ) {
-
 		$defaults = array(
-			'slug' => plugin_basename( __FILE__ ),
+			'slug'               => plugin_basename( __FILE__ ),
 			'proper_folder_name' => dirname( plugin_basename( __FILE__ ) ),
-			'sslverify' => true,
-			'access_token' => '',
+			'sslverify'          => true,
+			'access_token'       => '',
 		);
 
 		$this->config = wp_parse_args( $config, $defaults );
@@ -148,7 +147,6 @@ class GitHubUpdater
 
 			$zip_url = $scheme . '://api.github.com/repos' . $path;
 			$zip_url = add_query_arg( array( 'access_token' => $this->config['access_token'] ), $zip_url );
-
 			$this->config['zip_url'] = $zip_url;
 		}
 
@@ -252,7 +250,6 @@ class GitHubUpdater
 			if ( false !== $version )
 				set_site_transient( md5($this->config['slug']).'_new_version', $version, 60*60*6 );
 		}
-
 		return $version;
 	}
 
@@ -290,7 +287,6 @@ class GitHubUpdater
 		} else {
 			$github_data = get_site_transient( md5($this->config['slug']).'_github_data' );
 			if ( $this->overrule_transients() || ( ! isset( $github_data ) || ! $github_data || '' == $github_data ) ) {
-//				$github_data = $this->remote_get( $this->config['api_url'] );
 				$raw_response = $this->remote_get( trailingslashit( $this->config['raw_url'] ) . $this->config['readme'] );
 				if ( is_wp_error( $raw_response ) ) {
 					return false;
@@ -298,13 +294,12 @@ class GitHubUpdater
 				$github_data = $raw_response['body'];
 
 				// refresh every 6 hours
-//				set_site_transient( md5($this->config['slug']).'_github_data', $github_data, 60*60*6 );
+				set_site_transient( md5($this->config['slug']).'_github_data', $github_data, 60*60*6 );
 			}
 
 			// Store the data in this class instance for future calls
 			$this->github_data = $github_data;
 		}
-
 		return $github_data;
 	}
 
@@ -329,7 +324,7 @@ class GitHubUpdater
 	 */
 	public function get_description() {
 		$_description = $this->get_github_data();
-		return ( !empty( $_description->description ) ) ? $_description->description : false;
+		return ( isset($_description->description) && !empty( $_description->description ) ) ? $_description->description : false;
 	}
 
 
@@ -341,8 +336,7 @@ class GitHubUpdater
 	 */
 	public function get_plugin_data() {
 		include_once ABSPATH.'/wp-admin/includes/plugin.php';
-		$data = get_plugin_data( WP_PLUGIN_DIR.'/'.$this->config['slug'] );
-		return $data;
+		return get_plugin_data( WP_UPDATE_CHECKER_PL_FILE,true,false );
 	}
 
 
@@ -362,7 +356,6 @@ class GitHubUpdater
 
 		// check the version and decide if it's new
 		$update = version_compare( $this->config['new_version'], $this->config['version'] );
-
 		if ( 1 === $update ) {
 			$response = new stdClass;
 			$response->new_version = $this->config['new_version'];
@@ -405,7 +398,6 @@ class GitHubUpdater
 		$response->last_updated = $this->config['last_updated'];
 		$response->sections = array( 'description' => $this->config['description'] );
 		$response->download_link = $this->config['zip_url'];
-
 		return $response;
 	}
 
@@ -428,11 +420,11 @@ class GitHubUpdater
 		$proper_destination = WP_PLUGIN_DIR.'/'.$this->config['proper_folder_name'];
 		$wp_filesystem->move( $result['destination'], $proper_destination );
 		$result['destination'] = $proper_destination;
-		$activate = activate_plugin( WP_PLUGIN_DIR.'/'.$this->config['slug'] );
+		$activate = activate_plugin( WP_UPDATE_CHECKER_PL_FILE );
 
 		// Output the update message
-		$fail  = __( 'The plugin has been updated, but could not be reactivated. Please reactivate it manually.', 'github_plugin_updater' );
-		$success = __( 'Plugin reactivated successfully.', 'github_plugin_updater' );
+		$fail  = __( 'The plugin has been updated, but could not be reactivated. Please reactivate it manually.' );
+		$success = __( 'Plugin reactivated successfully.' );
 		echo is_wp_error( $activate ) ? $fail : $success;
 		return $result;
 
