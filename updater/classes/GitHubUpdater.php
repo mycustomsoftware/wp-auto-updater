@@ -249,7 +249,7 @@ class GitHubUpdater
 			// refresh every 6 hours
 			if ( false !== $version )
 				// refresh every 3 minutes
-				set_site_transient( md5($this->config['slug']).'_new_version', $version, 60*2 );
+				set_site_transient( md5($this->config['slug']).'_new_version', $version, 60*3 );
 		}
 		return $version;
 	}
