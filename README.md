@@ -7,7 +7,7 @@ Stable tag: 1.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-~Current Version: 1.0.3
+~Current Version: 1.0.4
 
 WordPress plugin that auto update active plugins, active themes and core.
 
