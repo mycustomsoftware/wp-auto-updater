@@ -348,7 +348,7 @@ class GitHubUpdater
 	 * @return object $transient updated plugin data transient
 	 */
 	public function api_check( $transient ) {
-		var_dump($transient);
+//		var_dump($transient);
 //		exit();
 		// Check if the transient contains the 'checked' information
 		// If not, just return its value without hacking it
