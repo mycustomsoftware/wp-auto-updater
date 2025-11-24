@@ -84,9 +84,9 @@ class GitHubUpdater
 		}
 
 		$this->set_defaults();
-		if(isset($this->config['api_url']) && !empty($this->config['api_url'])){
-			add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'api_check' ) );
-		}
+		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'api_check' ) );
+//		if(isset($this->config['api_url']) && !empty($this->config['api_url'])){
+//		}
 
 
 		// Hook into the plugin details screen
@@ -348,7 +348,8 @@ class GitHubUpdater
 	 * @return object $transient updated plugin data transient
 	 */
 	public function api_check( $transient ) {
-
+//		var_dump($transient);
+//		exit();
 		// Check if the transient contains the 'checked' information
 		// If not, just return its value without hacking it
 		if ( empty( $transient->checked ) )
@@ -357,17 +358,17 @@ class GitHubUpdater
 		// check the version and decide if it's new
 		$update = version_compare( $this->config['new_version'], $this->config['version'] );
 		if ( 1 === $update ) {
-			$response = new stdClass;
+			$response = new \stdClass;
+			$response->plugin = plugin_basename( WP_UPDATE_CHECKER_PL_PATH ).'/'.plugin_basename( WP_UPDATE_CHECKER_PL_PATH ).'.php';
 			$response->new_version = $this->config['new_version'];
 			$response->slug = $this->config['proper_folder_name'];
 			$response->url = add_query_arg( array( 'access_token' => $this->config['access_token'] ), $this->config['github_url'] );
 			$response->package = $this->config['zip_url'];
-
 			// If response is false, don't alter the transient
 			if ( false !== $response )
 				$transient->response[ $this->config['slug'] ] = $response;
 		}
-
+//var_dump($transient);
 		return $transient;
 	}
 
@@ -382,7 +383,6 @@ class GitHubUpdater
 	 * @return object $response the plugin info
 	 */
 	public function get_plugin_info( $false, $action, $response ) {
-
 		// Check if this call API is for the right plugin
 		if ( !isset( $response->slug ) || $response->slug != $this->config['slug'] )
 			return false;

@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Plugin Name: WP Updater
+ * Plugin Name: WP auto updater MCS
  * Plugin URI:
  * Description: This plugin automatically update all active plugins, active theme and WordPress core. This plugin does not update inactive plugins and themes.
- * Version: 1.0.2
+ * Version: 1.0.0
  * Author:      My Custom Software
  * Author URI: https://github.com/mycustomsoftware
  *  License: GPLv3
