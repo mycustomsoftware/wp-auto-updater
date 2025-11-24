@@ -248,7 +248,8 @@ class GitHubUpdater
 
 			// refresh every 6 hours
 			if ( false !== $version )
-				set_site_transient( md5($this->config['slug']).'_new_version', $version, 60*60*6 );
+				// refresh every 3 minutes
+				set_site_transient( md5($this->config['slug']).'_new_version', $version, 60*2 );
 		}
 		return $version;
 	}
@@ -293,8 +294,8 @@ class GitHubUpdater
 				}
 				$github_data = $raw_response['body'];
 
-				// refresh every 6 hours
-				set_site_transient( md5($this->config['slug']).'_github_data', $github_data, 60*60*6 );
+				// refresh every 3 minutes
+				set_site_transient( md5($this->config['slug']).'_github_data', $github_data, 60*3 );
 			}
 
 			// Store the data in this class instance for future calls
