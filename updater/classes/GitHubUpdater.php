@@ -85,8 +85,10 @@ class GitHubUpdater
 		}
 
 		$this->set_defaults();
+		if(isset($this->config['api_url']) && !empty($this->config['api_url'])){
+			add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'api_check' ) );
+		}
 
-		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'api_check' ) );
 
 		// Hook into the plugin details screen
 		add_filter( 'plugins_api', array( $this, 'get_plugin_info' ), 10, 3 );
@@ -104,7 +106,7 @@ class GitHubUpdater
 		$this->missing_config = array();
 
 		$required_config_params = array(
-			'api_url',
+//			'api_url',
 			'raw_url',
 			'github_url',
 			'zip_url',
@@ -155,7 +157,7 @@ class GitHubUpdater
 			$this->config['new_version'] = $this->get_new_version();
 
 		if ( ! isset( $this->config['last_updated'] ) )
-			$this->config['last_updated'] = $this->get_date();
+//			$this->config['last_updated'] = $this->get_date();
 
 		if ( ! isset( $this->config['description'] ) )
 			$this->config['description'] = $this->get_description();
@@ -198,8 +200,9 @@ class GitHubUpdater
 	 * @return mixed
 	 */
 	public function http_request_sslverify( $args, $url ) {
-		if ( $this->config[ 'zip_url' ] == $url )
-			$args[ 'sslverify' ] = $this->config[ 'sslverify' ];
+		if ( $this->config[ 'zip_url' ] == $url ) {
+			$args['sslverify'] = $this->config['sslverify'];
+		}
 
 		return $args;
 	}
@@ -213,14 +216,11 @@ class GitHubUpdater
 	 */
 	public function get_new_version() {
 		$version = get_site_transient( md5($this->config['slug']).'_new_version' );
-
 		if ( $this->overrule_transients() || ( !isset( $version ) || !$version || '' == $version ) ) {
-
-			$raw_response = $this->remote_get( trailingslashit( $this->config['raw_url'] ) . basename( $this->config['slug'] ) );
-
-			if ( is_wp_error( $raw_response ) )
+			$raw_response = $this->remote_get( trailingslashit( $this->config['raw_url'] ) . $this->config['readme'] );
+			if ( is_wp_error( $raw_response ) ) {
 				$version = false;
-
+			}
 			if (is_array($raw_response)) {
 				if (!empty($raw_response['body']))
 					preg_match( '/.*Version\:\s*(.*)$/mi', $raw_response['body'], $matches );
@@ -266,13 +266,14 @@ class GitHubUpdater
 	 * @return mixed
 	 */
 	public function remote_get( $query ) {
-		if ( ! empty( $this->config['access_token'] ) )
+		if ( ! empty( $this->config['access_token'] ) ){
 			$query = add_query_arg( array( 'access_token' => $this->config['access_token'] ), $query );
-
+		}
 		$raw_response = wp_remote_get( $query, array(
 			'sslverify' => $this->config['sslverify']
 		) );
-
+//var_dump($query);
+//var_dump($raw_response);
 		return $raw_response;
 	}
 
@@ -288,17 +289,16 @@ class GitHubUpdater
 			$github_data = $this->github_data;
 		} else {
 			$github_data = get_site_transient( md5($this->config['slug']).'_github_data' );
-
 			if ( $this->overrule_transients() || ( ! isset( $github_data ) || ! $github_data || '' == $github_data ) ) {
-				$github_data = $this->remote_get( $this->config['api_url'] );
-
-				if ( is_wp_error( $github_data ) )
+//				$github_data = $this->remote_get( $this->config['api_url'] );
+				$raw_response = $this->remote_get( trailingslashit( $this->config['raw_url'] ) . $this->config['readme'] );
+				if ( is_wp_error( $raw_response ) ) {
 					return false;
-
-				$github_data = json_decode( $github_data['body'] );
+				}
+				$github_data = $raw_response['body'];
 
 				// refresh every 6 hours
-				set_site_transient( md5($this->config['slug']).'_github_data', $github_data, 60*60*6 );
+//				set_site_transient( md5($this->config['slug']).'_github_data', $github_data, 60*60*6 );
 			}
 
 			// Store the data in this class instance for future calls
