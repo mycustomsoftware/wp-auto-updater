@@ -348,7 +348,7 @@ class GitHubUpdater
 	 * @return object $transient updated plugin data transient
 	 */
 	public function api_check( $transient ) {
-//		var_dump($transient);
+		var_dump($transient);
 //		exit();
 		// Check if the transient contains the 'checked' information
 		// If not, just return its value without hacking it
@@ -420,7 +420,8 @@ class GitHubUpdater
 		$wp_filesystem->move( $result['destination'], $proper_destination );
 		$result['destination'] = $proper_destination;
 		$activate = activate_plugin( WP_UPDATE_CHECKER_PL_FILE );
-
+		delete_site_transient( md5($this->config['slug']).'_github_data' );
+		delete_site_transient( md5($this->config['slug']).'_new_version' );
 		// Output the update message
 		$fail  = __( 'The plugin has been updated, but could not be reactivated. Please reactivate it manually.' );
 		$success = __( 'Plugin reactivated successfully.' );
