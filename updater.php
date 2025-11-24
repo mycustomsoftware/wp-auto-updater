@@ -4,7 +4,7 @@
  * Plugin Name: WP Updater
  * Plugin URI:
  * Description: This plugin automatically update all active plugins, active theme and WordPress core. This plugin does not update inactive plugins and themes.
- * Version: 1.3.1
+ * Version: 1.0.0
  * Author:      My Custom Software
  * Author URI: https://github.com/mycustomsoftware
  *  License: GPLv3
@@ -20,6 +20,7 @@ use WpAutoUpdater\CronSchedulesInterval;
 use WpAutoUpdater\DisableDefaultActions;
 use WpAutoUpdater\IgnoreUpdatesAction;
 use WpAutoUpdater\PageSettings;
+use WpAutoUpdater\SelfUpdateProvider;
 
 if (!defined('ABSPATH')) exit;
 require_once __DIR__ . '/updater/vendor/autoload.php';
@@ -31,7 +32,7 @@ if(!defined('WP_UPDATE_CHECKER_FILE')){
 	define('WP_UPDATE_CHECKER_FILE', __DIR__.$dirs.'updater'.$dirs.'index.php');
 }
 if(!defined('WP_UPDATE_CHECKER_VER')){
-	define('WP_UPDATE_CHECKER_VER', '1.3.1');
+	define('WP_UPDATE_CHECKER_VER', '1.0.0');
 }
 class WpAutoUpdaterMain
 {
@@ -42,6 +43,7 @@ class WpAutoUpdaterMain
 	);
 	function __construct()
 	{
+		new SelfUpdateProvider();
 		new DisableDefaultActions();
 		new CronSchedulesInterval();
 		new PageSettings();

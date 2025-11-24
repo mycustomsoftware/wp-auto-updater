@@ -5,12 +5,9 @@
       "WpAutoUpdater\\": "classes/"
     }
   },
-    "require": {
-        "nelexa/zip": "^4.0",
-      "radishconcepts/wordpress-github-plugin-updater": "dev-master"
-    },
-  "minimum-stability": "stable",
-  "prefer-stable": true,
+  "require": {
+      "nelexa/zip": "^4.0"
+  },
   "config": {
     "optimize-autoloader": true,
     "platform": {
