@@ -359,14 +359,14 @@ class GitHubUpdater
 		$update = version_compare( $this->config['new_version'], $this->config['version'] );
 		if ( 1 === $update ) {
 			$response = new \stdClass;
-			$response->plugin = plugin_basename( WP_UPDATE_CHECKER_PL_PATH ).'/'.plugin_basename( WP_UPDATE_CHECKER_PL_PATH ).'.php';
+			$response->plugin = plugin_basename( WP_UPDATE_CHECKER_PL_PATH ).'/wp-auto-updater-mcs.php';
 			$response->new_version = $this->config['new_version'];
 			$response->slug = $this->config['proper_folder_name'];
 			$response->url = add_query_arg( array( 'access_token' => $this->config['access_token'] ), $this->config['github_url'] );
 			$response->package = $this->config['zip_url'];
 			// If response is false, don't alter the transient
 			if ( false !== $response )
-				$transient->response[ $this->config['slug'] ] = $response;
+				$transient->response[ plugin_basename( WP_UPDATE_CHECKER_PL_PATH ).'/wp-auto-updater-mcs.php' ] = $response;
 		}
 //var_dump($transient);
 		return $transient;
@@ -386,7 +386,6 @@ class GitHubUpdater
 		// Check if this call API is for the right plugin
 		if ( !isset( $response->slug ) || $response->slug != $this->config['slug'] )
 			return false;
-
 		$response->slug = $this->config['slug'];
 		$response->plugin_name  = $this->config['plugin_name'];
 		$response->version = $this->config['new_version'];
