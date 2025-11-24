@@ -38,7 +38,7 @@ if(!defined('WP_UPDATE_CHECKER_FILE')){
 	define('WP_UPDATE_CHECKER_FILE', __DIR__.$dirs.'updater'.$dirs.'index.php');
 }
 if(!defined('WP_UPDATE_CHECKER_VER')){
-	define('WP_UPDATE_CHECKER_VER', '1.0.0');
+	define('WP_UPDATE_CHECKER_VER', '1.0.1');
 }
 class WpAutoUpdaterMain
 {
