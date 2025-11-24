@@ -154,7 +154,7 @@ class GitHubUpdater
 		if ( ! isset( $this->config['new_version'] ) )
 			$this->config['new_version'] = $this->get_new_version();
 
-		if ( ! isset( $this->config['last_updated'] ) )
+//		if ( ! isset( $this->config['last_updated'] ) )
 //			$this->config['last_updated'] = $this->get_date();
 
 		if ( ! isset( $this->config['description'] ) )
@@ -357,6 +357,7 @@ class GitHubUpdater
 
 		// check the version and decide if it's new
 		$update = version_compare( $this->config['new_version'], $this->config['version'] );
+//		var_dump($update);
 		if ( 1 === $update ) {
 			$response = new \stdClass;
 			$response->plugin = plugin_basename( WP_UPDATE_CHECKER_PL_PATH ).'/wp-auto-updater-mcs.php';
@@ -384,9 +385,15 @@ class GitHubUpdater
 	 */
 	public function get_plugin_info( $false, $action, $response ) {
 		// Check if this call API is for the right plugin
-		if ( !isset( $response->slug ) || $response->slug != $this->config['slug'] )
-			return false;
+		if ( !isset( $response->slug ) || $response->slug != $this->config['slug'] ) {
+			return $false;
+		}
+		$update = version_compare( $this->config['new_version'], $this->config['version'] );
+		if($update !== 1){
+			return $false;
+		}
 		$response->slug = $this->config['slug'];
+		$response->name  = $this->config['plugin_name'];
 		$response->plugin_name  = $this->config['plugin_name'];
 		$response->version = $this->config['new_version'];
 		$response->author = $this->config['author'];
@@ -394,7 +401,6 @@ class GitHubUpdater
 		$response->requires = $this->config['requires'];
 		$response->tested = $this->config['tested'];
 		$response->downloaded   = 0;
-		$response->last_updated = $this->config['last_updated'];
 		$response->sections = array( 'description' => $this->config['description'] );
 		$response->download_link = $this->config['zip_url'];
 		return $response;
