@@ -6,7 +6,7 @@
  * Description: This plugin automatically update all active plugins, active theme and WordPress core. This plugin does not update inactive plugins and themes.
  * Version: 1.0.1
  * Author:      My Custom Software
- * Author URI: https://github.com/mycustomsoftware
+ * Author URI: https://github.com/mycustomsoftware/wp-auto-updater-mcs
  *  License: GPLv3
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  * Requires PHP: 7.4
